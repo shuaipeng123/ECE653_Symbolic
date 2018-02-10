@@ -98,7 +98,7 @@ class AssertStmt (Stmt):
     def __init__ (self, cond):
         self.cond = cond
     def __eq__ (self, other):
-        type(self) == type(other) and \
+        return type(self) == type(other) and \
             self.cond == other.cond
 
 class AssumeStmt (Stmt):
@@ -120,7 +120,11 @@ class HavocStmt (Stmt):
 class Exp (Ast):
     """An expression"""
     def __init__ (self, op, args):
-        self.op = op
+        if isinstance(op, list):
+            self.op = op[0]
+        else:
+            self.op = op
+
         self.args = args
     def __eq__ (self, other):
         return type(self) == type(other) and \
@@ -298,7 +302,13 @@ class PrintVisitor (AstVisitor):
     def visit_IntVar (self, node, *args, **kwargs):
         self._write (node.name)
 
-    def visit_Const (self, node, *args, **kwargs):
+    def visit_BoolConst (self, node, *args, **kwargs):
+        if node.val:
+            self._write ('true')
+        else:
+            self._write ('false')
+
+    def visit_IntConst (self, node, *args, **kwargs):
         self._write (node.val)
 
     def visit_Exp (self, node, *args, **kwargs):
