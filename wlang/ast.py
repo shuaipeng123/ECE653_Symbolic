@@ -215,6 +215,9 @@ class AstVisitor(object):
 
     def visit (self, node, *args, **kwargs):
         """Visit a node."""
+        if 'state' in kwargs:
+            st = kwargs['state']
+            #print("st: in ast visitor "+str(st))
         method = 'visit_' + node.__class__.__name__
         visitor = getattr (self, method)
         return visitor (node, *args, **kwargs)
